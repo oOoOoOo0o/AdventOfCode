@@ -2,12 +2,14 @@
 #include <fstream>
 #include <string>
 #include <iostream>
-#include <list>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
 int main() {
+  auto start = chrono::high_resolution_clock::now();
+
   ifstream Input("2024/Day1Input.txt");
   string line;
 
@@ -61,4 +63,8 @@ int main() {
   }
 
   cout << similarityScore << endl;
+
+  auto end = chrono::high_resolution_clock::now();
+  auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+  cout << "Execution time: " << duration.count() << "ms" << endl;
 }
