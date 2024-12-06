@@ -7,7 +7,7 @@
 
 using namespace std;
 
-bool move(vector<string> &, int &, int &, char &, int &, int &);
+bool move(vector<string> &, int &, int &, int(&)[2], int &, int &);
 
 int main() {
   auto start = chrono::high_resolution_clock::now();
@@ -34,7 +34,7 @@ int main() {
 
   int x = xStart, y = yStart;
 
-  char dir = 'U';
+  int dir[] = {-1, 0};
   map[x][y] = 'X';
 
   // Part 1
@@ -62,7 +62,8 @@ int main() {
       x = xStart, y = yStart;
       map = map2;
       map[i][j] = '#';
-      dir = 'U';
+      dir[0] = -1;
+      dir[1] = 0;
       int seen = 0;
       int unique = 0;
       while (move(map, x, y, dir, unique, seen)) {
@@ -81,64 +82,23 @@ int main() {
   cout << "Execution time: " << duration.count() << "ms" << endl;
 }
 
-bool move(vector<string> &map, int &x, int &y, char &dir, int &unique, int &seen) {
-  switch (dir) {
-    case 'U':
-      if (x - 1 < 0) {
-        map[x][y] = 'X';
-        return false;
-      }
-      if (map[x-1][y] != '#') {
-        x--;
-        map[x][y] == 'X' ? seen++ : unique++;
-        map[x][y] = 'X';
-      } else {
-        dir = 'R';
-        move(map, x, y, dir, unique, seen);
-      }
-      break;
-    case 'R':
-      if (y + 1 >= map[x].size()) {
-        map[x][y] = 'X';
-        return false;
-      }
-      if (map[x][y+1] != '#') {
-        y++;
-        map[x][y] == 'X' ? seen++ : unique++;
-        map[x][y] = 'X';
-      } else {
-        dir = 'D';
-        move(map, x, y, dir, unique, seen);
-      }
-      break;
-    case 'D':
-      if (x + 1 >= map.size()) {
-        map[x][y] = 'X';
-        return false;
-      }
-      if (map[x+1][y] != '#') {
-        x++;
-        map[x][y] == 'X' ? seen++ : unique++;
-        map[x][y] = 'X';
-      } else {
-        dir = 'L';
-        move(map, x, y, dir, unique, seen);
-      }
-      break;
-    case 'L':
-      if (y - 1 < 0) {
-        map[x][y] = 'X';
-        return false;
-      }
-      if (map[x][y-1] != '#') {
-        y--;
-        map[x][y] == 'X' ? seen++ : unique++;
-        map[x][y] = 'X';
-      } else {
-        dir = 'U';
-        move(map, x, y, dir, unique, seen);
-      }
-      break;
+bool move(vector<string> &map, int &x, int &y, int (&dir)[2], int &unique, int &seen) {
+  if (x + dir[0] < 0 || y + dir[1] < 0 || x + dir[0] >= map.size() || y + dir[1] >= map[0].size()) {
+    map[x][y] = 'X';
+    return false;
   }
+
+  if (map[x+dir[0]][y+dir[1]] == '#') {
+    int temp = dir[0];
+    dir[0] = dir[1];
+    dir[1] = -temp;
+    move(map, x, y, dir, unique, seen);
+  } else {
+    x = x + dir[0];
+    y = y + dir[1];
+    map[x][y] == 'X' ? seen++ : unique++;
+    map[x][y] = 'X';
+  }
+
   return true;
 }
