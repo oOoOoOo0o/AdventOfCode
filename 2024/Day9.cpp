@@ -29,7 +29,7 @@ int main() {
 
 unsigned long long part1(string &line) {
   bool isFile = true;
-  vector<int> ids;
+  vector<unsigned long long> ids;
   int id = 0;
 
   for (int i = 0; i < line.size(); i++) {
@@ -62,7 +62,7 @@ unsigned long long part1(string &line) {
   }
 
   unsigned long long total = 0;
-  for (int i = 0; i < ids.size() && ids[i] != -1; i++) {
+  for (unsigned long long i = 0; i < ids.size() && ids[i] != -1; i++) {
     total += ids[i] * i;
   }
 
@@ -125,7 +125,7 @@ unsigned long long part2(string &line) {
   }
 
   unsigned long long total = 0;
-  for (int i = 0; i < ids.size(); i++) {
+  for (unsigned long long i = 0; i < ids.size(); i++) {
     if (ids[i] == -1) continue;
     total += ids[i] * i;
   }
